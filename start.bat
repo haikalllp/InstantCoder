@@ -2,6 +2,16 @@
 REM Sets the title of the command prompt window
 TITLE Next.js Dev + Ngrok
 
+echo Checking dependencies...
+
+REM Check if favicon exists in public folder
+if not exist "public\favicon.ico" (
+    echo Warning: favicon.ico not found in public folder.
+    echo The app will run without a custom icon.
+    echo To add a custom icon, place favicon.ico in the public folder.
+    echo.
+)
+
 echo Terminating any previous ngrok and Next.js processes...
 REM Kill any running ngrok processes
 taskkill /f /im ngrok.exe >nul 2>&1
@@ -89,13 +99,13 @@ if not exist "%EDGE_PATH%" set "EDGE_PATH=%LOCALAPPDATA%\Microsoft\Edge\Applicat
 
 if exist "%BRAVE_PATH%" (
     echo       Opening in Brave app mode...
-    start "" "%BRAVE_PATH%" --app=http://localhost:3000
+    start "" "%BRAVE_PATH%" --app=http://localhost:3000 --app-icon="%CD%\public\GeminiCoder.ico"
 ) else if exist "%CHROME_PATH%" (
     echo       Opening in Chrome app mode...
-    start "" "%CHROME_PATH%" --app=http://localhost:3000
+    start "" "%CHROME_PATH%" --app=http://localhost:3000 --app-icon="%CD%\public\GeminiCoder.ico"
 ) else if exist "%EDGE_PATH%" (
     echo       Opening in Edge app mode...
-    start "" "%EDGE_PATH%" --app=http://localhost:3000
+    start "" "%EDGE_PATH%" --app=http://localhost:3000 --app-icon="%CD%\public\GeminiCoder.ico"
 ) else (
     echo       No supported browsers found. Opening in your default browser...
     echo       Note: For a better development experience, consider installing Brave, Chrome, or Edge
