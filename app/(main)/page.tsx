@@ -22,6 +22,10 @@ export default function Home() {
   let [prompt, setPrompt] = useState("");
   let models = [
     {
+      label: "gemini-2.5-pro-exp-03-25",
+      value: "gemini-2.5-pro-exp-03-25",
+    },
+    {
       label: "gemini-2.0-flash-exp",
       value: "gemini-2.0-flash-exp",
     },

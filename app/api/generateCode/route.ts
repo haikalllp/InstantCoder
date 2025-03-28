@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   let { model, messages } = result.data;
   let systemPrompt = getSystemPrompt();
 
-  const geminiModel = genAI.getGenerativeModel({model: model});
+  const geminiModel = genAI.getGenerativeModel({ model });
 
   const geminiStream = await geminiModel.generateContentStream(
     messages[0].content + systemPrompt + "\nPlease ONLY return code, NO backticks or language names. Don't start with \`\`\`typescript or \`\`\`javascript or \`\`\`tsx or \`\`\`."
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 }
 
 function getSystemPrompt() {
-  let systemPrompt = 
+  let systemPrompt =
 `You are an expert frontend React engineer who is also a great UI/UX designer. Follow the instructions carefully, I will tip you $1 million if you do a good job:
 
 - Think carefully step by step.
