@@ -72,17 +72,33 @@ REM Waits for 5 seconds without user interruption
 timeout /t 5 /nobreak > nul
 
 echo [3/3] Opening development site in browser...
+REM Try to find Brave in common installation locations
+set "BRAVE_PATH=%PROGRAMFILES%\BraveSoftware\Brave-Browser\Application\brave.exe"
+if not exist "%BRAVE_PATH%" set "BRAVE_PATH=%PROGRAMFILES(X86)%\BraveSoftware\Brave-Browser\Application\brave.exe"
+if not exist "%BRAVE_PATH%" set "BRAVE_PATH=%LOCALAPPDATA%\BraveSoftware\Brave-Browser\Application\brave.exe"
+
 REM Try to find Chrome in common installation locations
 set "CHROME_PATH=%PROGRAMFILES%\Google\Chrome\Application\chrome.exe"
 if not exist "%CHROME_PATH%" set "CHROME_PATH=%PROGRAMFILES(X86)%\Google\Chrome\Application\chrome.exe"
 if not exist "%CHROME_PATH%" set "CHROME_PATH=%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"
 
-if exist "%CHROME_PATH%" (
+REM Try to find Edge in common installation locations
+set "EDGE_PATH=%PROGRAMFILES(X86)%\Microsoft\Edge\Application\msedge.exe"
+if not exist "%EDGE_PATH%" set "EDGE_PATH=%PROGRAMFILES%\Microsoft\Edge\Application\msedge.exe"
+if not exist "%EDGE_PATH%" set "EDGE_PATH=%LOCALAPPDATA%\Microsoft\Edge\Application\msedge.exe"
+
+if exist "%BRAVE_PATH%" (
+    echo       Opening in Brave app mode...
+    start "" "%BRAVE_PATH%" --app=http://localhost:3000
+) else if exist "%CHROME_PATH%" (
     echo       Opening in Chrome app mode...
     start "" "%CHROME_PATH%" --app=http://localhost:3000
+) else if exist "%EDGE_PATH%" (
+    echo       Opening in Edge app mode...
+    start "" "%EDGE_PATH%" --app=http://localhost:3000
 ) else (
-    echo       Chrome not found. Opening in your default browser...
-    echo       Note: For a better development experience, consider installing Chrome
+    echo       No supported browsers found. Opening in your default browser...
+    echo       Note: For a better development experience, consider installing Brave, Chrome, or Edge
     echo       to use the app mode feature.
     start http://localhost:3000
 )
@@ -97,7 +113,7 @@ echo Public URL: Check the Ngrok tab (black window) for your public URL
 echo.
 echo Tips:
 echo - Use localhost:3000 for local development
-echo - Use the Ngrok URL to share your site with others
+echo - Use the Ngrok URL (forwarding URL) to share your site with others
 echo - Press Ctrl+C in this window to stop the development server
 echo.
 
