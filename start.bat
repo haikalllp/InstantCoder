@@ -56,26 +56,54 @@ if not exist "node_modules" (
     echo node_modules directory found. Skipping npm install.
 )
 
-echo Starting ngrok to expose port 3000 in a new tab (requires Windows Terminal)...
+echo.
+echo ========================================
+echo Starting development environment...
+echo ========================================
+echo.
+
+echo [1/3] Starting ngrok tunnel in a new tab...
 REM Starts ngrok in a new Windows Terminal tab, exposing port 3000
 start wt -w 0 new-tab --title Ngrok ngrok http 3000
+echo       Check the Ngrok tab for your public URL to share your site.
 
-echo Waiting 5 seconds for the server/ngrok to initialize...
+echo [2/3] Waiting for services to initialize...
 REM Waits for 5 seconds without user interruption
 timeout /t 5 /nobreak > nul
 
-echo Opening browser in app mode at http://localhost:3000...
-REM Get the default browser's executable path
-for /f "tokens=*" %%b in ('reg query "HKEY_CLASSES_ROOT\http\shell\open\command" /ve 2^>nul ^| find /i "REG_SZ"') do set BROWSER=%%b
-REM Clean up the browser path (remove quotes and arguments)
-set BROWSER=%BROWSER:"=%
-set BROWSER=%BROWSER:%%1=%
-REM Open the default browser in app mode
-start "" "%BROWSER%" --app=http://localhost:3000
+echo [3/3] Opening development site in browser...
+REM Try to find Chrome in common installation locations
+set "CHROME_PATH=%PROGRAMFILES%\Google\Chrome\Application\chrome.exe"
+if not exist "%CHROME_PATH%" set "CHROME_PATH=%PROGRAMFILES(X86)%\Google\Chrome\Application\chrome.exe"
+if not exist "%CHROME_PATH%" set "CHROME_PATH=%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"
 
-echo Starting Next.js development server (npm run dev) in this tab...
+if exist "%CHROME_PATH%" (
+    echo       Opening in Chrome app mode...
+    start "" "%CHROME_PATH%" --app=http://localhost:3000
+) else (
+    echo       Chrome not found. Opening in your default browser...
+    echo       Note: For a better development experience, consider installing Chrome
+    echo       to use the app mode feature.
+    start http://localhost:3000
+)
+
+echo.
+echo ========================================
+echo Development Environment Ready!
+echo ========================================
+echo.
+echo Local Development URL: http://localhost:3000
+echo Public URL: Check the Ngrok tab (black window) for your public URL
+echo.
+echo Tips:
+echo - Use localhost:3000 for local development
+echo - Use the Ngrok URL to share your site with others
+echo - Press Ctrl+C in this window to stop the development server
+echo.
+
+echo Starting Next.js development server...
 REM Starts npm run dev directly in the current window/tab. This command will block further script execution here.
 npm run dev
 
 REM Note: Any commands below npm run dev might not execute until the dev server is stopped (Ctrl+C).
-echo Development environment setup initiated. Check the Ngrok tab for the public URL.
+echo Development environment stopped. Close all windows to completely terminate the session.
