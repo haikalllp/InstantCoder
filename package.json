@@ -7,7 +7,7 @@
     "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rimraf .next node_modules/.cache .turbo"
+    "clean": "rimraf node_modules .next node_modules/.cache .turbo"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.18.2",
